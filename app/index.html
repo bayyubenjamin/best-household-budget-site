@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Linden Ledger — A Household Budget for November 2026</title>
+<meta name="description" content="The Linden Ledger is the Linden family's working household budget for November 2026: envelopes, transactions, bills, savings goals and reports, all in one place.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="44" height="44" role="img">
+          <path d="M5 25 L24 9 L43 25" fill="none" stroke="#1e4d2e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 24 V41 H37 V24" fill="none" stroke="#1e4d2e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="20" y="31" width="8" height="10" rx="1" fill="#1e4d2e"/>
+          <circle cx="35" cy="13" r="8" fill="#c8912a" stroke="#faf4e6" stroke-width="2"/>
+          <text x="35" y="17.5" text-anchor="middle" font-size="11" font-weight="bold" fill="#faf4e6" font-family="Georgia, serif">$</text>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">The Linden Ledger</span>
+        <span class="brand-sub">Maya &amp; Tom · November 2026</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#/" data-route="">Dashboard</a>
+      <a href="#/transactions" data-route="transactions">Transactions</a>
+      <a href="#/budget" data-route="budget">Budget</a>
+      <a href="#/bills" data-route="bills">Bills</a>
+      <a href="#/goals" data-route="goals">Goals</a>
+      <a href="#/reports" data-route="reports">Reports</a>
+    </nav>
+    <p class="sidebar-note">November so far: <strong>$4,104 spent</strong> of $4,900 planned. <strong>$796 left</strong> with 4 days to go.</p>
+  </aside>
+  <div class="content">
+    <main id="app" class="app" aria-live="polite">
+      <noscript><p>The Linden Ledger needs JavaScript to show the budget — please enable it and reload.</p></noscript>
+    </main>
+    <footer class="footer">
+      <p>The Linden Ledger — a working budget for one real household, November 2026. Every figure on this site comes from the family's own records, and every control does what it says.</p>
+    </footer>
+  </div>
+</div>
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script src="views.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
