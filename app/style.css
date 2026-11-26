@@ -126,7 +126,7 @@ strong { color: var(--forest-dark); }
   box-shadow: var(--shadow);
   padding: 14px 16px;
 }
-.stat-card .label { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
+.stat-card .label { font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
 .stat-card .value { font-family: var(--serif); font-size: 30px; font-weight: bold; color: var(--forest-dark); line-height: 1.1; }
 .stat-card .sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
 .stat-card.accent { background: var(--forest); border-color: var(--forest); }
@@ -153,7 +153,7 @@ strong { color: var(--forest-dark); }
 
 table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+th { font-size: 12px; font-weight: 700; color: var(--muted); }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: #fbf7ea; }
@@ -186,7 +186,7 @@ tbody tr:hover { background: #fbf7ea; }
 .btn.small { padding: 5px 11px; font-size: 13.5px; border-radius: 7px; }
 .btn:disabled { opacity: 0.55; cursor: default; }
 
-form .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 13px; font-weight: 700; color: var(--forest-dark); }
 .field input, .field select {
@@ -209,19 +209,39 @@ form .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
 .progress .bar-track { flex: 1; }
 .progress .pct { font-size: 13px; font-weight: 700; color: var(--forest-dark); min-width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
 
-/* ---------- Budget envelopes ---------- */
+/* ---------- "Three things to know" (dashboard) ---------- */
 
-.env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.envelope { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 15px 16px; }
-.envelope h3 { font-size: 16.5px; margin-bottom: 2px; }
-.envelope .env-nums { font-size: 13.5px; color: var(--muted); margin-bottom: 9px; font-variant-numeric: tabular-nums; }
-.envelope .env-nums strong { color: var(--ink); }
-.envelope .env-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-.envelope .left { font-size: 13.5px; font-weight: 700; }
-.envelope .left.ok { color: var(--good); }
-.envelope .left.over { color: var(--warn); }
-.envelope .edit-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
-.envelope .edit-row input { width: 110px; font: inherit; font-size: 14px; padding: 6px 9px; border: 1px solid var(--line-strong); border-radius: 7px; }
+.know-list { list-style: none; margin: 0; padding: 0; }
+.know-list li { padding: 9px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.know-list li:first-child { border-top: none; padding-top: 2px; }
+.know-list li:last-child { padding-bottom: 0; }
+.know-list strong { color: var(--forest-dark); }
+
+/* ---------- Compact cards (transactions page) ---------- */
+
+.card.compact { padding: 12px 16px; margin-bottom: 12px; }
+.card.compact h2 { font-size: 16px; margin-bottom: 6px; }
+.card.compact .field label { font-size: 12px; }
+.card.compact .field input, .card.compact .field select { padding: 6px 9px; font-size: 14px; }
+.card.compact .row { gap: 10px; }
+.card.compact table th, .card.compact table td { padding: 6px 8px; }
+.card.compact .hint { margin-bottom: 8px; }
+
+/* ---------- Budget envelopes (one list of bars) ---------- */
+
+.env-list { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+.env-row { padding: 13px 18px; border-bottom: 1px solid var(--line); }
+.env-row:last-child { border-bottom: none; }
+.env-row-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.env-row .env-name { font-family: var(--serif); font-weight: bold; font-size: 16.5px; color: var(--forest-dark); }
+.env-row .env-nums { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; }
+.env-row .env-nums strong { color: var(--ink); }
+.env-row .env-left { font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.env-row .env-left.ok { color: var(--good); }
+.env-row .env-left.over { color: var(--warn); }
+.env-row .progress { margin-top: 8px; }
+.env-row .edit-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.env-row .edit-row input { width: 110px; font: inherit; font-size: 14px; padding: 6px 9px; border: 1px solid var(--line-strong); border-radius: 7px; }
 .totals-line { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; margin: 0 0 16px; }
 .totals-line b { font-family: var(--serif); font-size: 19px; color: var(--forest-dark); }
 
@@ -268,7 +288,6 @@ form .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
 @media (max-width: 900px) {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
-  .env-grid { grid-template-columns: repeat(2, 1fr); }
   .donut-wrap { flex-direction: column; align-items: flex-start; }
 }
 
@@ -284,7 +303,6 @@ form .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
   h1 { font-size: 25px; }
   .stat-grid { gap: 10px; }
   .stat-card .value { font-size: 25px; }
-  .env-grid { grid-template-columns: 1fr; }
   .hbar-row { grid-template-columns: 110px 1fr 72px; }
   table { font-size: 13.5px; }
   th, td { padding: 8px 5px; }

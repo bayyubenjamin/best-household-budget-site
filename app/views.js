@@ -105,8 +105,46 @@ function renderDashboard(state) {
       '<td class="num amount">' + money(tx.amount) + '</td></tr>';
   }).join("");
 
+  // "Three things to know" — every figure computed live from the
+  // state, so it stays true after any edit made on the site.
+  const pctSpent = Math.round((t.spent / t.income) * 100);
+  const tight = LINDEN_DATA.categories
+    .map(function (c) {
+      const alloc = allocationOf(state, c.id);
+      const sp = spent[c.id] || 0;
+      return { name: c.name, alloc: alloc, spent: sp, left: alloc - sp, pct: alloc > 0 ? (sp / alloc) * 100 : 0 };
+    })
+    .filter(function (e) { return e.spent < e.alloc && e.alloc > 0; })
+    .sort(function (a, b) { return b.pct - a.pct; })[0];
+  const overdue = state.bills
+    .filter(function (b) { return !b.paid && b.dueDay < LINDEN_DATA.household.asOfDay; })
+    .sort(function (a, b) { return a.dueDay - b.dueDay; });
+  const unpaidTotal = state.bills.filter(function (b) { return !b.paid; })
+    .reduce(function (a, b) { return a + b.amount; }, 0);
+  const afterBills = t.remaining - unpaidTotal;
+  const afterBillsDay = Math.round(afterBills / LINDEN_DATA.household.daysLeft);
+
+  const knowItems = [];
+  if (tight) {
+    knowItems.push('<li><strong>' + esc(tight.name) + ' is the tightest envelope.</strong> ' +
+      money(tight.left) + ' left of ' + money(tight.alloc) + ' — ' + Math.round(tight.pct) + '% spent, with ' +
+      LINDEN_DATA.household.daysLeft + ' days still to go.</li>');
+  }
+  if (overdue.length > 0) {
+    const first = overdue[0];
+    const daysOver = LINDEN_DATA.household.asOfDay - first.dueDay;
+    knowItems.push('<li><strong>The ' + esc(first.name.toLowerCase()) + ' bill (' + money(first.amount) + ') is ' +
+      daysOver + ' days overdue.</strong> It was due ' + dueLabel(first.dueDay) +
+      (overdue.length > 1
+        ? ' — and ' + (overdue.length - 1) + ' more bill' + (overdue.length - 1 > 1 ? 's are' : ' is') + ' overdue too.'
+        : '.') + '</li>');
+  }
+  knowItems.push('<li><strong>After the bills, ' + money(afterBills) + ' is left.</strong> Pay the ' +
+    money(unpaidTotal) + ' still owed and the family has about ' + money(afterBillsDay) + ' a day for the last ' +
+    LINDEN_DATA.household.daysLeft + ' days.</li>');
+
   return '' +
-    '<div class="page-head"><h1>November at a glance</h1>' +
+    '<div class="page-head"><h1>November is ' + pctSpent + '% spent — and every dollar already has a job.</h1>' +
     '<p class="lede">The Linden family — Maya, Tom, and two kids — and where their money stands on 26 November.</p></div>' +
     '<div class="stat-grid">' +
     '<div class="stat-card"><div class="label">Income</div><div class="value">' + money(t.income) + '</div><div class="sub">' + esc(incomeBits) + '</div></div>' +
@@ -114,6 +152,8 @@ function renderDashboard(state) {
     '<div class="stat-card accent"><div class="label">Remaining</div><div class="value">' + money(t.remaining) + '</div><div class="sub">' + LINDEN_DATA.household.daysLeft + ' days left in November</div></div>' +
     '<div class="stat-card"><div class="label">Savings rate</div><div class="value">' + t.savingsRate.toFixed(1) + '%</div><div class="sub">' + money(t.saved) + ' moved to savings</div></div>' +
     '</div>' +
+    '<section class="card know-panel"><h2>Three things to know in November</h2>' +
+    '<ul class="know-list">' + knowItems.join("") + '</ul></section>' +
     '<div class="grid-2">' +
     '<section class="card"><h2>Where November&rsquo;s money went</h2>' +
     '<p class="hint">Every dollar spent, by envelope — savings included.</p>' +
@@ -172,7 +212,7 @@ function renderTransactions(state, filters) {
   return '' +
     '<div class="page-head"><h1>Transactions</h1>' +
     '<p>Every dollar out the door in November — ' + state.transactions.length + ' transactions, adding up to ' + money(totals(state).spent) + '. Add one below and every total on the site updates.</p></div>' +
-    '<section class="card"><h2>Add a transaction</h2>' +
+    '<section class="card compact"><h2>Add a transaction</h2>' +
     '<form data-action="add-transaction"><div class="row">' +
     '<div class="field"><label for="tx-date">Date</label><input id="tx-date" name="date" type="date" value="2026-11-26" required></div>' +
     '<div class="field grow"><label for="tx-merchant">Merchant</label><input id="tx-merchant" name="merchant" type="text" placeholder="e.g. GreenMart Supermarket" required></div>' +
@@ -180,13 +220,13 @@ function renderTransactions(state, filters) {
     '<div class="field"><label for="tx-amount">Amount ($)</label><input id="tx-amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></div>' +
     '<button class="btn" type="submit">Add transaction</button>' +
     '</div></form></section>' +
-    '<section class="card"><h2>Find a transaction</h2>' +
+    '<section class="card compact"><h2>Find a transaction</h2>' +
     '<div class="row">' +
     '<div class="field"><label for="flt-cat">Category</label><select id="flt-cat" data-filter="category"><option value="">All categories</option>' + catOptions + '</select></div>' +
     '<div class="field"><label for="flt-month">Month</label><select id="flt-month" data-filter="month">' + monthOptions + '</select></div>' +
     '<div class="field grow"><label for="flt-search">Search merchant</label><input id="flt-search" data-filter="search" type="text" placeholder="Type a shop or name&hellip;" value="' + esc(f.search) + '"></div>' +
     '</div>' +
-    '<p class="hint" style="margin-top:12px" id="tx-count">Showing ' + rows.count + ' of ' + state.transactions.length + ' transactions.</p>' +
+    '<p class="hint" style="margin-top:8px" id="tx-count">Showing ' + rows.count + ' of ' + state.transactions.length + ' transactions.</p>' +
     '<table><thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th class="num">Amount</th></tr></thead>' +
     '<tbody id="tx-rows">' + rows.html + '</tbody></table></section>';
 }
@@ -196,34 +236,41 @@ function renderTransactions(state, filters) {
 function renderBudget(state, editingId) {
   const t = totals(state);
   const spent = t.spentByCat;
-  const cards = LINDEN_DATA.categories.map(function (c) {
+  // One vertical list, one row per envelope: name, bar, figures.
+  // A list of bars reads at a glance when shrunk, where thirteen
+  // identical cards read as a repeating pattern. Editing keeps the
+  // same data-action hooks main.js already wires (edit-alloc,
+  // save-alloc, cancel-alloc, data-edit-amount).
+  const rows = LINDEN_DATA.categories.map(function (c) {
     const alloc = allocationOf(state, c.id);
     const sp = spent[c.id] || 0;
     const left = alloc - sp;
     const pct = alloc > 0 ? Math.min(100, Math.round((sp / alloc) * 100)) : 0;
     const over = left < 0;
-    const fillClass = over ? "bar-fill over" : (pct >= 90 ? "bar-fill gold" : "bar-fill");
-    let foot;
-    if (editingId === c.id) {
-      foot = '<div class="edit-row"><input type="number" min="0" step="1" value="' + alloc + '" data-edit-amount="' + c.id + '" aria-label="New amount for ' + esc(c.name) + '">' +
+    const fillStyle = over
+      ? 'display:block;width:100%;background:#a33b2e'
+      : 'display:block;width:' + pct + '%;background:' + c.color;
+    const editBtn = editingId === c.id ? '' :
+      '<button class="btn small ghost" data-action="edit-alloc" data-cat="' + c.id + '">Edit</button>';
+    const editRow = editingId === c.id
+      ? '<div class="edit-row"><input type="number" min="0" step="1" value="' + alloc + '" data-edit-amount="' + c.id + '" aria-label="New amount for ' + esc(c.name) + '">' +
         '<button class="btn small" data-action="save-alloc" data-cat="' + c.id + '">Save</button>' +
-        '<button class="btn small ghost" data-action="cancel-alloc">Cancel</button></div>';
-    } else {
-      foot = '<div class="env-foot"><span class="left ' + (over ? "over" : "ok") + '">' +
-        (over ? money(-left) + ' over' : money(left) + ' left') + '</span>' +
-        '<button class="btn small ghost" data-action="edit-alloc" data-cat="' + c.id + '">Edit</button></div>';
-    }
-    return '<article class="envelope"><h3>' + esc(c.name) + '</h3>' +
-      '<p class="env-nums"><strong>' + money(sp) + '</strong> spent of ' + money(alloc) + ' planned</p>' +
-      '<div class="progress"><span class="bar-track"><span class="' + fillClass + '" style="display:block;width:' + pct + '%"></span></span><span class="pct">' + pct + '%</span></div>' +
-      foot + '</article>';
+        '<button class="btn small ghost" data-action="cancel-alloc">Cancel</button></div>'
+      : '';
+    return '<div class="env-row">' +
+      '<div class="env-row-top"><span class="env-name">' + esc(c.name) + '</span>' +
+      '<span class="env-nums"><strong>' + money(sp) + '</strong> spent of ' + money(alloc) + ' planned</span>' +
+      '<span class="env-left ' + (over ? 'over' : 'ok') + '">' +
+      (over ? money(-left) + ' over' : money(left) + ' left') + '</span>' + editBtn + '</div>' +
+      '<div class="progress"><span class="bar-track"><span class="bar-fill" style="' + fillStyle + '"></span></span><span class="pct">' + pct + '%</span></div>' +
+      editRow + '</div>';
   }).join("");
 
   return '' +
     '<div class="page-head"><h1>Budget envelopes</h1>' +
     '<p>Thirteen envelopes, one for each part of the month. Edit any planned amount and the totals below — and on the dashboard — move with it.</p></div>' +
     '<p class="totals-line">Planned <b>' + money(t.allocated) + '</b> of ' + money(t.income) + ' income &nbsp;·&nbsp; Spent <b>' + money(t.spent) + '</b> &nbsp;·&nbsp; Left <b>' + money(t.remaining) + '</b></p>' +
-    '<div class="env-grid">' + cards + '</div>';
+    '<div class="env-list">' + rows + '</div>';
 }
 
 // ---------- Bills ----------
