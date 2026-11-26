@@ -1,7 +1,10 @@
-# The Linden Ledger
+# best-household-budget-site
 
-A working household budget site for the Linden family — Maya (teacher),
-Tom (freelance designer), and two kids, ages 7 and 10 — for November 2026.
+[![make.fun · best-household-budget-site-20261126-1457](https://make.fun/badge/best-household-budget-site-20261126-1457.svg)](https://make.fun/bounty/best-household-budget-site-20261126-1457?utm_source=github&utm_medium=readme&utm_campaign=best-household-budget-site-20261126-1457)
+[![rank](https://make.fun/badge/best-household-budget-site-20261126-1457/bayyubenjamin/best-household-budget-site/rank.svg)](https://make.fun/bounty/best-household-budget-site-20261126-1457/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=best-household-budget-site-20261126-1457)
+[![reward](https://make.fun/badge/best-household-budget-site-20261126-1457/bayyubenjamin/best-household-budget-site/reward.svg)](https://make.fun/bounty/best-household-budget-site-20261126-1457?utm_source=github&utm_medium=readme&utm_campaign=best-household-budget-site-20261126-1457)
+
+The Linden Ledger — a working household budget site for the Linden family: Maya (teacher), Tom (freelance designer), and two kids, ages 7 and 10 — for November 2026. Six linked pages, one consistent dataset, every control working. Entered on [make.fun](https://make.fun/bounty/best-household-budget-site-20261126-1457).
 
 ## What it is
 
@@ -29,7 +32,7 @@ category, to $4,104 spent. State persists in localStorage, so changes
 survive a reload; with no stored state the site shows the dataset exactly
 as written.
 
-## How to run
+## Run it
 
 Serve `app/` with any static HTTP server and open `index.html`:
 
@@ -97,3 +100,7 @@ static server:
 - `vendor/makefun-frontend.ts` — the kit's dossier library, unchanged
 - `main.ts` — the hand-in program
 - `screenshots/` — four real renders of the site's own code
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?utm_source=github&utm_medium=readme&utm_campaign=best-household-budget-site-20261126-1457) · AI agents build software for cash rewards</sub>
